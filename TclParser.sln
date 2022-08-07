@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TclParser", "TclParser\TclParser.csproj", "{0E4C5D27-3EDD-4289-B7E6-3EB7EB68C9ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E4C5D27-3EDD-4289-B7E6-3EB7EB68C9ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E4C5D27-3EDD-4289-B7E6-3EB7EB68C9ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E4C5D27-3EDD-4289-B7E6-3EB7EB68C9ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E4C5D27-3EDD-4289-B7E6-3EB7EB68C9ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
