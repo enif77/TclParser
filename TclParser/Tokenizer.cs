@@ -17,7 +17,8 @@ public class Tokenizer : ITokenizer
 
     public Tokenizer(ISourceReader reader)
     {
-        _reader = reader ?? throw new ArgumentNullException(nameof(reader));
+        _reader = new NewLineEscapingSourceReader(
+                reader ?? throw new ArgumentNullException(nameof(reader)));
         CurrentToken = Token.EofToken();
 
         _ = _reader.NextChar();
