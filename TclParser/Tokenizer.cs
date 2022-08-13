@@ -176,6 +176,11 @@ public class Tokenizer : ITokenizer
         var level = 1;
         while (true)
         {
+            if (IsEoF(c))
+            {
+                break;
+            }
+            
             if (c == '{')
             {
                 level++;
@@ -191,11 +196,15 @@ public class Tokenizer : ITokenizer
                     break;
                 }
             }
-            else if (IsEoF(c))
+            else if (c == '\\')
             {
-                break;
+                c = _reader.NextChar();
+                if (c != '{' && c != '}')
+                {
+                    buffer.Append('\\');
+                }
             }
-            
+
             buffer.Append((char)c);
 
             c = _reader.NextChar();
