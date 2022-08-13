@@ -173,28 +173,36 @@ public class Tokenizer : ITokenizer
 
         // and consume all chars till the nearest '}' or EoF.
         var buffer = new StringBuilder();
+        var level = 1;
         while (true)
         {
-            if (c == '}')
+            if (c == '{')
             {
-                // Eat the bracketed word end.
-                _ = _reader.NextChar();
+                level++;
+            }
+            else if (c == '}')
+            {
+                level--;
+                if (level <= 0)
+                {
+                    // Eat the bracketed word end.
+                    _ = _reader.NextChar();
 
+                    break;
+                }
+            }
+            else if (IsEoF(c))
+            {
                 break;
             }
             
-            if (IsEoF(c))
-            {
-                return Result<IToken>.Error("The '}' bracketed word end is missing.");
-            }
-
             buffer.Append((char)c);
 
             c = _reader.NextChar();
         }
 
-        return Result<IToken>.Ok(
-            CurrentToken = Token.WordToken(buffer.ToString())
-        );
+        return (level > 0)
+            ? Result<IToken>.Error("Too many opening '{' brackets in a bracketed word definition.")
+            : Result<IToken>.Ok(CurrentToken = Token.WordToken(buffer.ToString()));
     }
 }
