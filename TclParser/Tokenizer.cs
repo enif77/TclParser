@@ -168,9 +168,7 @@ public class Tokenizer : ITokenizer
     {
         // Consume the bracketed word start char...
         var c = _reader.NextChar();
-
-        // TODO: Add support for "\{" and multiple levels of {aa {ee} bb}.
-
+        
         // and consume all chars till the nearest '}' or EoF.
         var buffer = new StringBuilder();
         var level = 1;
