@@ -186,10 +186,13 @@ public class Tokenizer : ITokenizer
             else if (c == '}')
             {
                 level--;
-                if (level <= 0)
+                if (level == 0)
                 {
                     // Eat the bracketed word end.
-                    _ = _reader.NextChar();
+                    if (IsWordEnd(_reader.NextChar()) == false)
+                    {
+                        return Result<IToken>.Error("An EoF, words or commands separator after the '}' bracketed word end expected.");
+                    }
 
                     break;
                 }
