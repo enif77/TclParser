@@ -35,7 +35,7 @@ public class Tokenizer : ITokenizer
             if (IsEoF(c))
             {
                 return Result<IToken>.Ok(
-                    CurrentToken = GenerateToken(buffer, () => Token.EofToken())
+                    CurrentToken = GenerateToken(buffer, Token.EofToken)
                 );
             }
             
