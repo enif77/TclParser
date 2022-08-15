@@ -64,8 +64,7 @@ public class Tokenizer : ITokenizer
                     continue;
                 }
             }
-            
-            if (IsCommandsSeparator(c))
+            else if (IsCommandsSeparator(c))
             {
                 return Result<IToken>.Ok(
                     CurrentToken = GenerateToken(buffer, () =>
@@ -77,8 +76,7 @@ public class Tokenizer : ITokenizer
                     })
                 );
             }
-            
-            if (c == '{')
+            else if (c == '{')
             {
                 // Not in the middle of a word?
                 if (buffer.Length == 0)
