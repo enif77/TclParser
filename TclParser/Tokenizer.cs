@@ -84,6 +84,14 @@ public class Tokenizer : ITokenizer
                     return CollectBracketedWord();
                 }
             }
+            else if (c == '"')
+            {
+                // Not in the middle of a word?
+                if (buffer.Length == 0)
+                {
+                    return CollectQuotedWord();
+                }
+            }
             
             buffer.Append((char)c);
 
@@ -189,7 +197,7 @@ public class Tokenizer : ITokenizer
                     // Eat the bracketed word end.
                     if (IsWordEnd(_reader.NextChar()) == false)
                     {
-                        return Result<IToken>.Error("An EoF, words or commands separator after the '}' bracketed word end expected.");
+                        return Result<IToken>.Error("An EoF, word or commands separator after the '}' bracketed word end expected.");
                     }
 
                     break;
@@ -212,5 +220,47 @@ public class Tokenizer : ITokenizer
         return (level > 0)
             ? Result<IToken>.Error("Too many opening '{' brackets in a bracketed word definition.")
             : Result<IToken>.Ok(CurrentToken = Token.WordToken(buffer.ToString()));
+    }
+    
+    
+    private IResult<IToken>CollectQuotedWord()
+    {
+        // Consume the quoted word start char...
+        var c = _reader.NextChar();
+        
+        // and consume all chars till the nearest '"' or EoF.
+        var buffer = new StringBuilder();
+        while (true)
+        {
+            if (IsEoF(c))
+            {
+                break;
+            }
+            
+            if (c == '"')
+            {
+                // Eat the quoted word end.
+                return IsWordEnd(_reader.NextChar())
+                    ? Result<IToken>.Ok(CurrentToken = Token.WordToken(buffer.ToString()))
+                    : Result<IToken>.Error("An EoF, word or commands separator after the '\"' quoted word end expected.");
+            }
+            
+            // TODO: Escaped chars.
+            
+            // if (c == '\\')
+            // {
+            //     c = _reader.NextChar();
+            //     if (c != '{' && c != '}')
+            //     {
+            //         buffer.Append('\\');
+            //     }
+            // }
+
+            buffer.Append((char)c);
+
+            c = _reader.NextChar();
+        }
+
+        return Result<IToken>.Error("Closing '\"' in a quoted word definition expected.");
     }
 }
