@@ -76,21 +76,15 @@ public class Tokenizer : ITokenizer
                     })
                 );
             }
-            else if (c == '{')
+            else switch (c)
             {
                 // Not in the middle of a word?
-                if (buffer.Length == 0)
-                {
+                case '{' when buffer.Length == 0:
                     return CollectBracketedWord();
-                }
-            }
-            else if (c == '"')
-            {
+                
                 // Not in the middle of a word?
-                if (buffer.Length == 0)
-                {
+                case '"' when buffer.Length == 0:
                     return CollectQuotedWord();
-                }
             }
             
             buffer.Append((char)c);
