@@ -231,24 +231,18 @@ public class Tokenizer : ITokenizer
                 break;
             }
             
-            if (c == '"')
+            switch (c)
             {
-                // Eat the quoted word end.
-                return IsWordEnd(_reader.NextChar())
-                    ? Result<IToken>.Ok(CurrentToken = Token.WordToken(buffer.ToString()))
-                    : Result<IToken>.Error("An EoF, word or commands separator after the '\"' quoted word end expected.");
+                case '"':
+                    // Eat the quoted word end.
+                    return IsWordEnd(_reader.NextChar())
+                        ? Result<IToken>.Ok(CurrentToken = Token.WordToken(buffer.ToString()))
+                        : Result<IToken>.Error("An EoF, word or commands separator after the '\"' quoted word end expected.");
+                
+                case '\\':
+                    c = EscapeQuotedWordChar();
+                    break;
             }
-            
-            // TODO: Escaped chars.
-            
-            // if (c == '\\')
-            // {
-            //     c = _reader.NextChar();
-            //     if (c != '{' && c != '}')
-            //     {
-            //         buffer.Append('\\');
-            //     }
-            // }
 
             buffer.Append((char)c);
 
@@ -256,5 +250,26 @@ public class Tokenizer : ITokenizer
         }
 
         return Result<IToken>.Error("Closing '\"' in a quoted word definition expected.");
+    }
+    
+    
+    private int EscapeQuotedWordChar()
+    {
+        var c = _reader.NextChar();
+
+        // TODO: Octal and UTF chars.
+
+        return c switch
+        {
+            'a' => 0x7,
+            'b' => 0x8,
+            'f' => 0xC,
+            'n' => 0xA,
+            'r' => 0xD,
+            't' => 0x9,
+            'v' => 0xB,
+            '\\' => '\\',
+            _ => c
+        };
     }
 }
